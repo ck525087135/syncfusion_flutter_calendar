@@ -879,19 +879,13 @@ class _CustomCalendarScrollViewState extends State<CustomCalendarScrollView>
       bool isResourceEnabled,
       double viewHeaderHeight,
       double timeLabelWidth) {
-    print('aaaaaaaaaaaaaaaaaaaa');
-    print(details);
     final _CalendarViewState currentState = _getCurrentViewByVisibleDates()!;
     AppointmentView? appointmentView =
         _getDragAppointment(details, currentState);
-    print(currentState);
-    print(isNeedDragAndDrop);
-    print(appointmentView);
     if (!isNeedDragAndDrop || appointmentView == null) {
       _dragDetails.value.position.value = null;
       return;
     }
-    print('bbbbbbbbbbbbbbbbbbbbbbbb');
     currentState._removeAllWidgetHovering();
     appointmentView = appointmentView.clone();
     _handleAppointmentDragStart(
@@ -908,7 +902,6 @@ class _CustomCalendarScrollViewState extends State<CustomCalendarScrollView>
     if (CalendarViewHelper.isTimelineView(widget.view)) {
       return currentState._handleTouchOnTimeline(null, details);
     } else if (widget.view == CalendarView.month) {
-      print('ccccccccccc');
       //// return null while the drag operation on mobile platform.
       return currentState._handleTouchOnMonthView(null, details);
     }
@@ -8938,13 +8931,11 @@ class _CalendarViewState extends State<_CalendarView>
 
     final double viewHeaderHeight = CalendarViewHelper.getViewHeaderHeight(
         widget.calendar.viewHeaderHeight, widget.view);
-    print('viewHeaderHeight---$viewHeaderHeight');
     final double weekNumberPanelWidth =
         CalendarViewHelper.getWeekNumberPanelWidth(
             widget.calendar.showWeekNumber,
             widget.width,
             widget.isMobilePlatform);
-    print('weekNumberPanelWidth----$weekNumberPanelWidth');
     if ((!_isRTL && xDetails < weekNumberPanelWidth) ||
         (_isRTL && xDetails > widget.width - weekNumberPanelWidth)) {
       return null;
@@ -8992,7 +8983,6 @@ class _CalendarViewState extends State<_CalendarView>
                 widget.calendar.maxDate, selectedDate) ||
             CalendarViewHelper.isDateInDateCollection(
                 widget.blackoutDates, selectedDate)) {
-          print('ddddddddddddddd');
           return null;
         }
 
@@ -9006,7 +8996,6 @@ class _CalendarViewState extends State<_CalendarView>
             widget.calendar.monthViewSettings.showTrailingAndLeadingDates,
             currentMonth,
             selectedDate)) {
-          print('eeeeeeeeeeee');
           return null;
         }
 
@@ -9049,7 +9038,6 @@ class _CalendarViewState extends State<_CalendarView>
         _updatedSelectionChangedCallback(
             canRaiseSelectionChanged, previousSelectedDate);
       }
-      print('fffffffffffff');
       return appointmentView;
     }
     return null;

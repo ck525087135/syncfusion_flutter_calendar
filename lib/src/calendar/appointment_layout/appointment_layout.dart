@@ -471,12 +471,35 @@ class _AppointmentLayoutState extends State<AppointmentLayout> {
     }
   }
 
+  ///TODO: 新修改的
+  int getWeeksInMonth(DateTime date) {
+    final firstDayOfMonth = DateTime(date.year, date.month, 1);
+    final lastDayOfMonth = DateTime(date.year, date.month + 1, 0);
+
+    // 计算第一个周日
+    DateTime firstSunday =
+        firstDayOfMonth.subtract(Duration(days: firstDayOfMonth.weekday % 7));
+
+    // 计算最后一个周日
+    DateTime lastSunday =
+        lastDayOfMonth.add(Duration(days: (7 - lastDayOfMonth.weekday) % 7));
+
+    // 计算周数
+    int weeks = (lastSunday.difference(firstSunday).inDays / 7).ceil();
+
+    return weeks;
+  }
+
   void _updateMonthAppointmentDetails(
       List<CalendarAppointment> visibleAppointments) {
     final double cellWidth =
         (widget.width - _weekNumberPanelWidth) / DateTime.daysPerWeek;
-    final double cellHeight =
-        widget.height / widget.calendar.monthViewSettings.numberOfWeeksInView;
+
+    ///TODO: 新修改的
+    final double cellHeight = widget.height /
+        getWeeksInMonth(widget.visibleDates[widget.visibleDates.length ~/ 2]);
+    // final double cellHeight =
+    //     widget.height / widget.calendar.monthViewSettings.numberOfWeeksInView;
     if (widget.calendar.monthViewSettings.appointmentDisplayMode !=
         MonthAppointmentDisplayMode.appointment) {
       return;
@@ -1739,11 +1762,33 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
     }
   }
 
+  ///TODO: 新修改的
+  int getWeeksInMonth(DateTime date) {
+    final firstDayOfMonth = DateTime(date.year, date.month, 1);
+    final lastDayOfMonth = DateTime(date.year, date.month + 1, 0);
+
+    // 计算第一个周日
+    DateTime firstSunday =
+        firstDayOfMonth.subtract(Duration(days: firstDayOfMonth.weekday % 7));
+
+    // 计算最后一个周日
+    DateTime lastSunday =
+        lastDayOfMonth.add(Duration(days: (7 - lastDayOfMonth.weekday) % 7));
+
+    // 计算周数
+    int weeks = (lastSunday.difference(firstSunday).inDays / 7).ceil();
+
+    return weeks;
+  }
+
   void _drawMonthAppointment(Canvas canvas, Size size, Paint paint) {
     final double cellWidth =
         (size.width - weekNumberPanelWidth) / DateTime.daysPerWeek;
+    // final double cellHeight =
+    //     size.height / calendar.monthViewSettings.numberOfWeeksInView;
+    ///TODO: 新修改的
     final double cellHeight =
-        size.height / calendar.monthViewSettings.numberOfWeeksInView;
+        size.height / getWeeksInMonth(visibleDates[visibleDates.length ~/ 2]);
 
     switch (calendar.monthViewSettings.appointmentDisplayMode) {
       case MonthAppointmentDisplayMode.none:

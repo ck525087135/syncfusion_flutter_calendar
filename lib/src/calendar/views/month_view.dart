@@ -16,7 +16,7 @@ import '../sfcalendar.dart';
 class MonthViewWidget extends StatefulWidget {
   /// Constructor to create the month view widget to holds month cells for
   /// calendar month view.
-  const MonthViewWidget(
+  MonthViewWidget(
       this.visibleDates,
       this.rowCount,
       this.monthCellStyle,
@@ -42,7 +42,7 @@ class MonthViewWidget extends StatefulWidget {
       this.visibleAppointmentNotifier);
 
   /// Defines the row count for the month view.
-  final int rowCount;
+  int rowCount;
 
   /// Defines the style for the month cells.
   final MonthCellStyle monthCellStyle;
@@ -120,7 +120,30 @@ class _MonthViewWidgetState extends State<MonthViewWidget> {
   @override
   void initState() {
     widget.visibleAppointmentNotifier.addListener(_updateAppointment);
+
+    ///TODO: 新修改的
+    widget.rowCount =
+        getWeeksInMonth(widget.visibleDates[widget.visibleDates.length ~/ 2]);
     super.initState();
+  }
+
+  ///TODO: 新修改的
+  int getWeeksInMonth(DateTime date) {
+    final firstDayOfMonth = DateTime(date.year, date.month, 1);
+    final lastDayOfMonth = DateTime(date.year, date.month + 1, 0);
+
+    // 计算第一个周日
+    DateTime firstSunday =
+        firstDayOfMonth.subtract(Duration(days: firstDayOfMonth.weekday % 7));
+
+    // 计算最后一个周日
+    DateTime lastSunday =
+        lastDayOfMonth.add(Duration(days: (7 - lastDayOfMonth.weekday) % 7));
+
+    // 计算周数
+    int weeks = (lastSunday.difference(firstSunday).inDays / 7).ceil();
+
+    return weeks;
   }
 
   @override
@@ -156,9 +179,13 @@ class _MonthViewWidgetState extends State<MonthViewWidget> {
       double xPosition = weekNumberPanelWidth, yPosition = 0;
       final int currentMonth =
           widget.visibleDates[visibleDatesCount ~/ 2].month;
+      // final bool showTrailingLeadingDates =
+      // CalendarViewHelper.isLeadingAndTrailingDatesVisible(
+      //     widget.rowCount, widget.showTrailingAndLeadingDates);
+      ///TODO: 新修改的
       final bool showTrailingLeadingDates =
           CalendarViewHelper.isLeadingAndTrailingDatesVisible(
-              widget.rowCount, widget.showTrailingAndLeadingDates);
+              6, widget.showTrailingAndLeadingDates);
       for (int i = 0; i < visibleDatesCount; i++) {
         final DateTime currentVisibleDate = widget.visibleDates[i];
         if (!showTrailingLeadingDates &&
@@ -419,7 +446,29 @@ class _MonthViewRenderObject extends CustomCalendarRenderObject {
     }
 
     _rowCount = value;
+
+    ///TODO: 新修改的
+    _rowCount = getWeeksInMonth(_visibleDates[_visibleDates.length ~/ 2]);
     markNeedsLayout();
+  }
+
+  ///TODO: 新修改的
+  int getWeeksInMonth(DateTime date) {
+    final firstDayOfMonth = DateTime(date.year, date.month, 1);
+    final lastDayOfMonth = DateTime(date.year, date.month + 1, 0);
+
+    // 计算第一个周日
+    DateTime firstSunday =
+        firstDayOfMonth.subtract(Duration(days: firstDayOfMonth.weekday % 7));
+
+    // 计算最后一个周日
+    DateTime lastSunday =
+        lastDayOfMonth.add(Duration(days: (7 - lastDayOfMonth.weekday) % 7));
+
+    // 计算周数
+    int weeks = (lastSunday.difference(firstSunday).inDays / 7).ceil();
+
+    return weeks;
   }
 
   double _textScaleFactor;
@@ -758,9 +807,13 @@ class _MonthViewRenderObject extends CustomCalendarRenderObject {
       RenderBox? child = firstChild;
       final int visibleDatesCount = visibleDates.length;
       final int currentMonth = visibleDates[visibleDatesCount ~/ 2].month;
+      // final bool showTrailingLeadingDates =
+      // CalendarViewHelper.isLeadingAndTrailingDatesVisible(
+      //     rowCount, showTrailingAndLeadingDates);
+      ///TODO: 新修改的
       final bool showTrailingLeadingDates =
           CalendarViewHelper.isLeadingAndTrailingDatesVisible(
-              rowCount, showTrailingAndLeadingDates);
+              6, showTrailingAndLeadingDates);
       _drawWeekNumberPanel(context.canvas, cellHeight);
       for (int i = 0; i < visibleDatesCount; i++) {
         final DateTime currentVisibleDate = visibleDates[i];
@@ -934,10 +987,13 @@ class _MonthViewRenderObject extends CustomCalendarRenderObject {
             : themeData.brightness == Brightness.light
                 ? Colors.black26
                 : Colors.white38);
-
+    // final bool showTrailingLeadingDates =
+    // CalendarViewHelper.isLeadingAndTrailingDatesVisible(
+    //     rowCount, showTrailingAndLeadingDates);
+    ///TODO: 新修改的
     final bool showTrailingLeadingDates =
         CalendarViewHelper.isLeadingAndTrailingDatesVisible(
-            rowCount, showTrailingAndLeadingDates);
+            6, showTrailingAndLeadingDates);
 
     final Color currentMonthBackgroundColor = monthCellStyle.backgroundColor ??
         calendarTheme.activeDatesBackgroundColor!;
@@ -1214,9 +1270,13 @@ class _MonthViewRenderObject extends CustomCalendarRenderObject {
             : weekNumberPanelWidth,
         top = 0;
     final double cellHeight = size.height / rowCount;
+    // final bool showTrailingLeadingDates =
+    // CalendarViewHelper.isLeadingAndTrailingDatesVisible(
+    //     rowCount, showTrailingAndLeadingDates);
+    ///TODO: 新修改的
     final bool showTrailingLeadingDates =
         CalendarViewHelper.isLeadingAndTrailingDatesVisible(
-            rowCount, showTrailingAndLeadingDates);
+            6, showTrailingAndLeadingDates);
     final int currentMonth = visibleDates[visibleDates.length ~/ 2].month;
     for (int i = 0; i < visibleDates.length; i++) {
       final DateTime currentVisibleDate = visibleDates[i];

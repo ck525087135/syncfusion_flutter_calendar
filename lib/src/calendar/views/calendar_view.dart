@@ -11198,10 +11198,15 @@ class _CalendarViewState extends State<_CalendarView>
 
           cellWidth =
               (widget.width - weekNumberPanelWidth) / DateTime.daysPerWeek;
+          /// TODO: 新修改的
+          // cellHeight = (widget.height -
+          //         CalendarViewHelper.getViewHeaderHeight(
+          //             widget.calendar.viewHeaderHeight, widget.view)) /
+          //     widget.calendar.monthViewSettings.numberOfWeeksInView;
           cellHeight = (widget.height -
-                  CalendarViewHelper.getViewHeaderHeight(
-                      widget.calendar.viewHeaderHeight, widget.view)) /
-              widget.calendar.monthViewSettings.numberOfWeeksInView;
+              CalendarViewHelper.getViewHeaderHeight(
+                  widget.calendar.viewHeaderHeight, widget.view)) / getWeeksInMonth(widget.visibleDates[widget.visibleDates.length ~/2])
+              ;
           return _getDateFromPositionForMonth(cellWidth, cellHeight, x, y);
         }
       case CalendarView.day:
@@ -11233,6 +11238,25 @@ class _CalendarViewState extends State<_CalendarView>
           return _getDateFromPositionForTimeline(cellWidth, cellHeight, x, y);
         }
     }
+  }
+
+  ///TODO: 新修改的
+  int getWeeksInMonth(DateTime date) {
+    final firstDayOfMonth = DateTime(date.year, date.month, 1);
+    final lastDayOfMonth = DateTime(date.year, date.month + 1, 0);
+
+    // 计算第一个周日
+    DateTime firstSunday =
+    firstDayOfMonth.subtract(Duration(days: firstDayOfMonth.weekday % 7));
+
+    // 计算最后一个周日
+    DateTime lastSunday =
+    lastDayOfMonth.add(Duration(days: (7 - lastDayOfMonth.weekday) % 7));
+
+    // 计算周数
+    int weeks = (lastSunday.difference(firstSunday).inDays / 7).ceil();
+
+    return weeks;
   }
 
   void _drawSelection(double x, double y, double timeLabelWidth) {

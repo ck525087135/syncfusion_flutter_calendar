@@ -175,7 +175,8 @@ class _MonthViewWidgetState extends State<MonthViewWidget> {
       final int visibleDatesCount = widget.visibleDates.length;
       final double cellWidth =
           (widget.width - weekNumberPanelWidth) / DateTime.daysPerWeek;
-      final double cellHeight = widget.height / widget.rowCount;
+      /// TODO: 新修改的
+      final double cellHeight = widget.height / getWeeksInMonth(widget.visibleDates[widget.visibleDates.length ~/ 2]);
       double xPosition = weekNumberPanelWidth, yPosition = 0;
       final int currentMonth =
           widget.visibleDates[visibleDatesCount ~/ 2].month;
@@ -1262,7 +1263,6 @@ class _MonthViewRenderObject extends CustomCalendarRenderObject {
     if (child != null) {
       return semanticsBuilder;
     }
-
     final double cellWidth =
         (size.width - weekNumberPanelWidth) / DateTime.daysPerWeek;
     double left = isRTL
